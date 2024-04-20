@@ -344,14 +344,16 @@ require("lazy").setup({
 					previewer = false,
 				}))
 			end, { desc = "[/] Fuzzily search in current buffer" })
-			vim.keymap.set("v", "<C-f>", function()
-				local word = vim.fn.expand("<cword>")
-				--				builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-				--					winblend = 10,
-				--					previewer = false,
-				--				}))
+			local default_opts = { noremap = true, silent = true }
+			vim.keymap.set("v", "<C-f>", "y<ESC>:Telescope grep_string default_text=<c-r>0<CR>", default_opts)
+			vim.keymap.set("n", "<leader>pWs", function()
+				local word = vim.fn.expand("<cWORD>")
 				builtin.grep_string({ search = word })
-			end, { desc = "[ ] Find word in current buffers" })
+			end)
+			vim.keymap.set("n", "<leader>pws", function()
+				local word = vim.fn.expand("<cword>")
+				builtin.grep_string({ search = word })
+			end)
 
 			-- It's also possible to pass additional configuration options.
 			--  See `:help telescope.builtin.live_grep()` for information about particular keys
