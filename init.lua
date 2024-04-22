@@ -68,15 +68,17 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+vim.opt.shell = "pwsh.exe"
+
+vim.g.transparency = 0.8
+local alpha = function()
+	return string.format("%x", math.floor(255 * (vim.g.transparency or 0.8)))
+end
 if vim.g.neovide then
 	-- g:neovide_transparency should be 0 if you want to unify transparency of content and title bar.
 	-- Helper function for transparency formatting
-	local alpha = function()
-		return string.format("%x", math.floor(255 * (vim.g.transparency or 0.8)))
-	end
 	-- g:neovide_transparency should be 0 if you want to unify transparency of content and title bar.
-	vim.g.neovide_transparency = 0.95
-	vim.g.transparency = 0.8
+	vim.g.neovide_transparency = 0.9
 	vim.g.neovide_scale_factor = 0.7
 	vim.g.neovide_background_color = "#0f1117" .. alpha()
 	-- vim.g.neovide_input_use_logo = true
@@ -130,9 +132,22 @@ vim.keymap.set("n", "<F11>", function()
 		vim.g.neovide_fullscreen = not vim.g.neovide_fullscreen
 	end
 end, { desc = "neovide fullscreen" })
+-- comment line
+vim.keymap.set("i", "<C-/>", function()
+	vim.api.nvim_input("<Esc>gcca")
+end, { desc = "comment line in insert mode" })
+vim.keymap.set("i", "<C-v>", function()
+	vim.api.nvim_input('<Esc>"+pa')
+end)
+
+vim.keymap.set("n", "<C-/>", function()
+	vim.api.nvim_input("<Esc>gcc<Esc>")
+end, { desc = "comment line in normal mode" })
+-- show directory
+vim.keymap.set("n", "<C-b>", vim.cmd.Ex, { desc = "Open Directory" })
 
 -- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
+-- Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
 vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
@@ -198,17 +213,23 @@ require("lazy").setup({
 	{ -- Adds git related signs to the gutter, as well as utilities for managing changes
 		"lewis6991/gitsigns.nvim",
 		opts = {
-			signs = {
-				add = { hl = "DiffAdd", text = "│", numhl = "GitSignsAddNr" },
-				change = { hl = "DiffChange", text = "│", numhl = "GitSignsChangeNr" },
-
-				delete = { hl = "DiffDelete", text = "", numhl = "GitSignsDeleteNr" },
-				topdelete = { hl = "DiffDelete", text = "‾", numhl = "GitSignsDeleteNr" },
-				changedelete = { hl = "DiffChangeDelete", text = "~", numhl = "GitSignsChangeNr" },
+			current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
+			current_line_blame_opts = {
+				virt_text = true,
+				virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
+				delay = 1000,
+				ignore_whitespace = false,
+			},
+			current_line_blame_formatter_opts = {
+				relative_time = true,
 			},
 		},
 	},
-
+	{
+		"ThePrimeagen/harpoon",
+		branch = "harpoon2",
+		dependencies = { "nvim-lua/plenary.nvim" },
+	},
 	-- NOTE: Plugins can also be configured to run Lua code when they are loaded.
 	--
 	-- This is often very useful to both group configuration, as well as handle
@@ -674,9 +695,9 @@ require("lazy").setup({
 				-- No, but seriously. Please read `:help ins-completion`, it is really good!
 				mapping = cmp.mapping.preset.insert({
 					-- Select the [n]ext item
-					["<C-n>"] = cmp.mapping.select_next_item(),
+					["<Tab>"] = cmp.mapping.select_next_item(),
 					-- Select the [p]revious item
-					["<C-p>"] = cmp.mapping.select_prev_item(),
+					["<S-Tab>"] = cmp.mapping.select_prev_item(),
 
 					-- Scroll the documentation window [b]ack / [f]orward
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -685,7 +706,7 @@ require("lazy").setup({
 					-- Accept ([y]es) the completion.
 					--  This will auto-import if your LSP supports it.
 					--  This will expand snippets if the LSP sent a snippet.
-					["<Tab>"] = cmp.mapping.confirm({ select = true }),
+					["<Enter>"] = cmp.mapping.confirm({ select = true }),
 
 					-- Manually trigger a completion from nvim-cmp.
 					--  Generally you don't need this, because nvim-cmp will display
@@ -729,12 +750,15 @@ require("lazy").setup({
 		--
 		-- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
 		"folke/tokyonight.nvim",
-		priority = 1000, -- Make sure to load this before all the other start plugins.
+		priority = 1000,
+		-- Make sure to load this before all the other start plugins.
 		init = function()
 			-- Load the colorscheme here.
 			-- Like many other themes, this one has different styles, and you could load
 			-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
 			vim.cmd.colorscheme("tokyonight-night")
+			-- vim.api.nvim_set_hl(0, "Normal", { bg = "#00000050" })
+			-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#00000050" })
 
 			-- You can configure highlights by doing something like:
 			vim.cmd.hi("Comment gui=none")

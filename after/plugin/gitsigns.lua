@@ -1,0 +1,16 @@
+-- gitsigns keymap
+-- TODO: personalizzare al meglio
+vim.keymap.set("n", "<C-g>hs", require("gitsigns").stage_hunk, { desc = "Stage hunk" })
+vim.keymap.set("n", "<C-g>hr", require("gitsigns").reset_hunk, { desc = "Reset hunk" })
+vim.keymap.set("n", "<C-g>hS", require("gitsigns").stage_buffer, { desc = "Stage buffer" })
+vim.keymap.set("n", "<C-g>hu", require("gitsigns").undo_stage_hunk, { desc = "Undo stage hunk" })
+vim.keymap.set("n", "<C-g>hR", require("gitsigns").reset_buffer, { desc = "Reset buffer" })
+vim.keymap.set("n", "<C-g>hp", require("gitsigns").preview_hunk, { desc = "Preview hunk" })
+vim.keymap.set("n", "<C-g>hb", function()
+	require("gitsigns").blame_line({ full = true })
+end, { desc = "Show git blame in float window" })
+vim.keymap.set("n", "<C-g>hd", require("gitsigns").diffthis, { desc = "Diff this" })
+vim.keymap.set("n", "<C-g>,", function()
+	require("gitsigns").diffthis("~1")
+end, { desc = "Diff with last commit" })
+vim.keymap.set("n", "<C-g>td", require("gitsigns").toggle_deleted, { desc = "Toggle deleted" })
