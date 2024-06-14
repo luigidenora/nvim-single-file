@@ -1,4 +1,4 @@
--- Set <space> as the leader key
+-- SET <SPACE> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = " "
@@ -128,9 +128,7 @@ vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 
 -- stupid neovide F11
 vim.keymap.set("n", "<F11>", function()
-	if vim.g.neovide then
-		vim.g.neovide_fullscreen = not vim.g.neovide_fullscreen
-	end
+	vim.g.neovide_fullscreen = not vim.g.neovide_fullscreen
 end, { desc = "neovide fullscreen" })
 -- comment line
 vim.keymap.set("i", "<C-/>", function()
@@ -144,7 +142,7 @@ vim.keymap.set("n", "<C-/>", function()
 	vim.api.nvim_input("<Esc>gcc<Esc>")
 end, { desc = "comment line in normal mode" })
 -- show directory
-vim.keymap.set("n", "<C-b>", vim.cmd.Ex, { desc = "Open Directory" })
+vim.keymap.set("n", "<C-b>", vim.cmd.NvimTreeToggle, { desc = "Open Directory" })
 
 -- Keybinds to make split navigation easier.
 -- Use CTRL+<hjkl> to switch between windows
@@ -230,6 +228,7 @@ require("lazy").setup({
 		branch = "harpoon2",
 		dependencies = { "nvim-lua/plenary.nvim" },
 	},
+	{ "akinsho/bufferline.nvim", version = "*", dependencies = "nvim-tree/nvim-web-devicons" },
 	-- NOTE: Plugins can also be configured to run Lua code when they are loaded.
 	--
 	-- This is often very useful to both group configuration, as well as handle
@@ -621,7 +620,7 @@ require("lazy").setup({
 				-- Disable "format_on_save lsp_fallback" for languages that don't
 				-- have a well standardized coding style. You can add additional
 				-- languages here or re-enable it for the disabled ones.
-				local disable_filetypes = { c = true, cpp = true }
+				local disable_filetypes = { c = true, cpp = true, ejs = true }
 				return {
 					timeout_ms = 500,
 					lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
@@ -634,7 +633,8 @@ require("lazy").setup({
 				--
 				-- You can use a sub-list to tell conform to run *until* a formatter
 				-- is found.
-				-- javascript = { { "prettierd", "prettier" } },
+				javascript = { { "prettierd", "prettier" } },
+				typescript = { { "prettierd", "prettier" } },
 			},
 		},
 	},
@@ -759,7 +759,6 @@ require("lazy").setup({
 			vim.cmd.colorscheme("tokyonight-night")
 			-- vim.api.nvim_set_hl(0, "Normal", { bg = "#00000050" })
 			-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#00000050" })
-
 			-- You can configure highlights by doing something like:
 			vim.cmd.hi("Comment gui=none")
 		end,
@@ -808,6 +807,17 @@ require("lazy").setup({
 
 			-- ... and there is more!
 			--  Check out: https://github.com/echasnovski/mini.nvim
+		end,
+	},
+	{
+		"nvim-tree/nvim-tree.lua",
+		version = "*",
+		lazy = false,
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
+		},
+		config = function()
+			require("nvim-tree").setup({})
 		end,
 	},
 	{ -- Highlight, edit, and navigate code
