@@ -126,10 +126,18 @@ vim.keymap.set("n", "<right>", '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set("n", "<up>", '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 
--- stupid neovide F11
+-- stupid neovide/nvim_qt F11
+vim.g.nvim_qn_fullscreen = false
+
 vim.keymap.set("n", "<F11>", function()
 	vim.g.neovide_fullscreen = not vim.g.neovide_fullscreen
-end, { desc = "neovide fullscreen" })
+	vim.g.nvim_qn_fullscreen = not vim.g.nvim_qn_fullscreen
+	if vim.g.neovide_fullscreen then
+		vim.cmd("call GuiWindowFullScreen(0)")
+	else
+		vim.cmd("call GuiWindowFullScreen(1)")
+	end
+end, { desc = "fullscreen" })
 -- comment line
 vim.keymap.set("i", "<C-/>", function()
 	vim.api.nvim_input("<Esc>gcca")
@@ -329,7 +337,9 @@ require("lazy").setup({
 				--     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
 				--   },
 				-- },
-				-- pickers = {}
+				pickers = {
+					hidden = true,
+				},
 				extensions = {
 					["ui-select"] = {
 						require("telescope.themes").get_dropdown(),
@@ -346,7 +356,7 @@ require("lazy").setup({
 
 			vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
 			vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
-			vim.keymap.set("n", "<C-p>", builtin.find_files, { desc = "[S]earch [F]iles" })
+			vim.keymap.set("n", "<C-p>", builtin.git_files, { desc = "[S]earch [F]iles" })
 			vim.keymap.set("n", "<C-S-p>", builtin.commands, { desc = "Open Commands" })
 			vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
 			vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
