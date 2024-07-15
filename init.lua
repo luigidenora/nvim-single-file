@@ -1,4 +1,4 @@
--- SET <SPACE> as the leader key
+-- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = " "
@@ -27,7 +27,7 @@ vim.opt.showmode = false
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
--- vim.opt.clipboard = 'unnamedplus'
+vim.opt.clipboard = "unnamedplus"
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -52,10 +52,11 @@ vim.opt.timeoutlen = 300
 -- Configure how new splits should be opened
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
-vim.opt.list = false
+vim.opt.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 -- Preview substitutions live, as you type!
@@ -68,32 +69,6 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 vim.opt.shell = "pwsh.exe"
-
-vim.g.transparency = 0.8
-local alpha = function()
-	return string.format("%x", math.floor(255 * (vim.g.transparency or 0.8)))
-end
-if vim.g.neovide then
-	-- g:neovide_transparency should be 0 if you want to unify transparency of content and title bar.
-	-- Helper function for transparency formatting
-	-- g:neovide_transparency should be 0 if you want to unify transparency of content and title bar.
-	vim.g.neovide_transparency = 0.9
-	vim.g.neovide_scale_factor = 0.7
-	vim.g.neovide_background_color = "#0f1117" .. alpha()
-	-- vim.g.neovide_input_use_logo = true
-	--	vim.g.neovide_cursor_trail_length = 0.05
-	--	vim.g.neovide_floating_blur_amount_x = 2.0
-	--	vim.g.neovide_remember_window_size = true
-	--	vim.g.neovide_cursor_animation_length = 0.05
-	--	vim.g.neovide_cursor_vfx_mode = "pixiedust"
-	vim.g.neovide_floating_shadow = true
-	vim.g.neovide_floating_z_height = 10
-	--	vim.g.neovide_light_angle_degrees = 45
-	-- vim.g.neovide_light_radius = 5
-	--	vim.g.neovide_floating_blur_amount_x = 2.0
-	--	vim.g.neovide_floating_blur_amount_y = 2.0
-end
-
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -125,34 +100,9 @@ vim.keymap.set("n", "<right>", '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set("n", "<up>", '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 
--- stupid neovide/nvim_qt F11
-vim.g.nvim_qn_fullscreen = false
-
-vim.keymap.set("n", "<F11>", function()
-	vim.g.neovide_fullscreen = not vim.g.neovide_fullscreen
-	vim.g.nvim_qn_fullscreen = not vim.g.nvim_qn_fullscreen
-	if vim.g.neovide_fullscreen then
-		vim.cmd("call GuiWindowFullScreen(0)")
-	else
-		vim.cmd("call GuiWindowFullScreen(1)")
-	end
-end, { desc = "fullscreen" })
--- comment line
-vim.keymap.set("i", "<C-/>", function()
-	vim.api.nvim_input("<Esc>gcca")
-end, { desc = "comment line in insert mode" })
-vim.keymap.set("i", "<C-v>", function()
-	vim.api.nvim_input('<Esc>"+pa')
-end)
-
-vim.keymap.set("n", "<C-/>", function()
-	vim.api.nvim_input("<Esc>gcc<Esc>")
-end, { desc = "comment line in normal mode" })
--- show directory
 vim.keymap.set("n", "<C-b>", vim.cmd.NvimTreeToggle, { desc = "Open Directory" })
-
 -- Keybinds to make split navigation easier.
--- Use CTRL+<hjkl> to switch between windows
+--  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
 vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
@@ -341,9 +291,7 @@ require("lazy").setup({
 				--     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
 				--   },
 				-- },
-				pickers = {
-					hidden = true,
-				},
+				-- pickers = {}
 				extensions = {
 					["ui-select"] = {
 						require("telescope.themes").get_dropdown(),
@@ -361,17 +309,17 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
 			vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
 			vim.keymap.set("n", "<C-p>", builtin.git_files, { desc = "[S]earch [F]iles" })
-			vim.keymap.set("n", "<C-S-p>", builtin.commands, { desc = "Open Commands" })
+			vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
 			vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
 			vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
-			vim.keymap.set("n", "<C-S-f>", builtin.live_grep, { desc = "[S]earch by [G]rep" })
+			vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
 			vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
 			vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
 			vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
 			vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
 
 			-- Slightly advanced example of overriding default behavior and theme
-			vim.keymap.set("n", "<C-f>", function()
+			vim.keymap.set("n", "<leader>/", function()
 				-- You can pass additional configuration to Telescope to change the theme, layout, etc.
 				builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
 					winblend = 10,
@@ -399,7 +347,7 @@ require("lazy").setup({
 			end, { desc = "[S]earch [/] in Open Files" })
 
 			-- Shortcut for searching your Neovim configuration files
-			vim.keymap.set("n", "<F2>", function()
+			vim.keymap.set("n", "<leader>sn", function()
 				builtin.find_files({ cwd = vim.fn.stdpath("config") })
 			end, { desc = "[S]earch [N]eovim files" })
 		end,
@@ -459,8 +407,8 @@ require("lazy").setup({
 					--
 					-- In this case, we create a function that lets us more easily define mappings specific
 					-- for LSP related items. It sets the mode, buffer and description for us each time.
-					local map = function(keys, func, desc, mode)
-						vim.keymap.set((mode or "n"), keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+					local map = function(keys, func, desc)
+						vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 					end
 
 					-- Jump to the definition of the word under your cursor.
@@ -515,14 +463,26 @@ require("lazy").setup({
 					-- When you move your cursor, the highlights will be cleared (the second autocommand).
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
 					if client and client.server_capabilities.documentHighlightProvider then
+						local highlight_augroup =
+							vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
 						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 							buffer = event.buf,
+							group = highlight_augroup,
 							callback = vim.lsp.buf.document_highlight,
 						})
 
 						vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
 							buffer = event.buf,
+							group = highlight_augroup,
 							callback = vim.lsp.buf.clear_references,
+						})
+
+						vim.api.nvim_create_autocmd("LspDetach", {
+							group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
+							callback = function(event2)
+								vim.lsp.buf.clear_references()
+								vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = event2.buf })
+							end,
 						})
 					end
 
@@ -532,7 +492,7 @@ require("lazy").setup({
 					-- This may be unwanted, since they displace some of your code
 					if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
 						map("<leader>th", function()
-							vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())
+							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 						end, "[T]oggle Inlay [H]ints")
 					end
 				end,
@@ -709,9 +669,9 @@ require("lazy").setup({
 				-- No, but seriously. Please read `:help ins-completion`, it is really good!
 				mapping = cmp.mapping.preset.insert({
 					-- Select the [n]ext item
-					["<Tab>"] = cmp.mapping.select_next_item(),
+					-- ["<C-n>"] = cmp.mapping.select_next_item(),
 					-- Select the [p]revious item
-					["<S-Tab>"] = cmp.mapping.select_prev_item(),
+					-- ["<C-p>"] = cmp.mapping.select_prev_item(),
 
 					-- Scroll the documentation window [b]ack / [f]orward
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -720,7 +680,13 @@ require("lazy").setup({
 					-- Accept ([y]es) the completion.
 					--  This will auto-import if your LSP supports it.
 					--  This will expand snippets if the LSP sent a snippet.
-					["<Enter>"] = cmp.mapping.confirm({ select = true }),
+					-- ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+
+					-- If you prefer more traditional completion keymaps,
+					-- you can uncomment the following lines
+					["<CR>"] = cmp.mapping.confirm({ select = true }),
+					["<Tab>"] = cmp.mapping.select_next_item(),
+					["<S-Tab>"] = cmp.mapping.select_prev_item(),
 
 					-- Manually trigger a completion from nvim-cmp.
 					--  Generally you don't need this, because nvim-cmp will display
@@ -758,25 +724,6 @@ require("lazy").setup({
 		end,
 	},
 
-	--	{ -- You can easily change to a different colorscheme.
-	--		-- Change the name of the colorscheme plugin below, and then
-	--		-- change the command in the config to whatever the name of that colorscheme is.
-	--		--
-	--		-- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-	--		"folke/tokyonight.nvim",
-	--		priority = 1000,
-	--		-- Make sure to load this before all the other start plugins.
-	--		init = function()
-	--			-- Load the colorscheme here.
-	--			-- Like many other themes, this one has different styles, and you could load
-	--			-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-	--			vim.cmd.colorscheme("tokyonight-night")
-	--			-- vim.api.nvim_set_hl(0, "Normal", { bg = "#00000050" })
-	--			-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#00000050" })
-	--			-- You can configure highlights by doing something like:
-	--			vim.cmd.hi("Comment gui=none")
-	--		end,
-	--	},
 	{
 		"scottmckendry/cyberdream.nvim",
 		lazy = false,
@@ -797,6 +744,7 @@ require("lazy").setup({
 			vim.cmd.hi("Comment gui=none")
 		end,
 	},
+
 	-- Highlight todo, notes, etc in comments
 	{
 		"folke/todo-comments.nvim",
@@ -857,7 +805,7 @@ require("lazy").setup({
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		opts = {
-			ensure_installed = { "bash", "c", "html", "lua", "luadoc", "markdown", "vim", "vimdoc" },
+			ensure_installed = { "bash", "c", "diff", "html", "lua", "luadoc", "markdown", "vim", "vimdoc" },
 			-- Autoinstall languages that are not installed
 			auto_install = true,
 			highlight = {
