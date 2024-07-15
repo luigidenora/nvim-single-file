@@ -52,7 +52,6 @@ vim.opt.timeoutlen = 300
 -- Configure how new splits should be opened
 vim.opt.splitright = true
 vim.opt.splitbelow = true
-
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
@@ -226,9 +225,6 @@ require("lazy").setup({
 				delay = 1000,
 				ignore_whitespace = false,
 			},
-			current_line_blame_formatter_opts = {
-				relative_time = true,
-			},
 		},
 	},
 	{
@@ -251,7 +247,9 @@ require("lazy").setup({
 	-- Then, because we use the `config` key, the configuration only runs
 	-- after the plugin has been loaded:
 	--  config = function() ... end
-
+	{
+		"xiyaowong/transparent.nvim",
+	},
 	{ -- Useful plugin to show you pending keybinds.
 		"folke/which-key.nvim",
 		event = "VimEnter", -- Sets the loading event to 'VimEnter'
@@ -259,19 +257,25 @@ require("lazy").setup({
 			require("which-key").setup()
 
 			-- Document existing key chains
-			require("which-key").register({
-				["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
-				["<leader>d"] = { name = "[D]ocument", _ = "which_key_ignore" },
-				["<leader>r"] = { name = "[R]ename", _ = "which_key_ignore" },
-				["<leader>s"] = { name = "[S]earch", _ = "which_key_ignore" },
-				["<leader>w"] = { name = "[W]orkspace", _ = "which_key_ignore" },
-				["<leader>t"] = { name = "[T]oggle", _ = "which_key_ignore" },
-				["<leader>h"] = { name = "Git [H]unk", _ = "which_key_ignore" },
+			require("which-key").add({
+
+				{ "<leader>c", group = "[C]ode" },
+				{ "<leader>c_", hidden = true },
+				{ "<leader>d", group = "[D]ocument" },
+				{ "<leader>d_", hidden = true },
+				{ "<leader>h", group = "Git [H]unk" },
+				{ "<leader>h_", hidden = true },
+				{ "<leader>r", group = "[R]ename" },
+				{ "<leader>r_", hidden = true },
+				{ "<leader>s", group = "[S]earch" },
+				{ "<leader>s_", hidden = true },
+				{ "<leader>t", group = "[T]oggle" },
+				{ "<leader>t_", hidden = true },
+				{ "<leader>w", group = "[W]orkspace" },
+				{ "<leader>w_", hidden = true },
 			})
 			-- visual mode
-			require("which-key").register({
-				["<leader>h"] = { "Git [H]unk" },
-			}, { mode = "v" })
+			require("which-key").add({ "<leader>h", desc = "Git [H]unk", mode = "v" })
 		end,
 	},
 
@@ -395,7 +399,7 @@ require("lazy").setup({
 			end, { desc = "[S]earch [/] in Open Files" })
 
 			-- Shortcut for searching your Neovim configuration files
-			vim.keymap.set("n", "<C-,>", function()
+			vim.keymap.set("n", "<F2>", function()
 				builtin.find_files({ cwd = vim.fn.stdpath("config") })
 			end, { desc = "[S]earch [N]eovim files" })
 		end,
@@ -754,26 +758,45 @@ require("lazy").setup({
 		end,
 	},
 
-	{ -- You can easily change to a different colorscheme.
-		-- Change the name of the colorscheme plugin below, and then
-		-- change the command in the config to whatever the name of that colorscheme is.
-		--
-		-- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-		"folke/tokyonight.nvim",
+	--	{ -- You can easily change to a different colorscheme.
+	--		-- Change the name of the colorscheme plugin below, and then
+	--		-- change the command in the config to whatever the name of that colorscheme is.
+	--		--
+	--		-- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+	--		"folke/tokyonight.nvim",
+	--		priority = 1000,
+	--		-- Make sure to load this before all the other start plugins.
+	--		init = function()
+	--			-- Load the colorscheme here.
+	--			-- Like many other themes, this one has different styles, and you could load
+	--			-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+	--			vim.cmd.colorscheme("tokyonight-night")
+	--			-- vim.api.nvim_set_hl(0, "Normal", { bg = "#00000050" })
+	--			-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#00000050" })
+	--			-- You can configure highlights by doing something like:
+	--			vim.cmd.hi("Comment gui=none")
+	--		end,
+	--	},
+	{
+		"scottmckendry/cyberdream.nvim",
+		lazy = false,
 		priority = 1000,
-		-- Make sure to load this before all the other start plugins.
 		init = function()
-			-- Load the colorscheme here.
-			-- Like many other themes, this one has different styles, and you could load
-			-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-			vim.cmd.colorscheme("tokyonight-night")
-			-- vim.api.nvim_set_hl(0, "Normal", { bg = "#00000050" })
-			-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#00000050" })
-			-- You can configure highlights by doing something like:
+			vim.cmd.colorscheme("cyberdream")
+			-- Add a custom keybinding to toggle the colorscheme
+			vim.api.nvim_set_keymap("n", "<leader>tt", ":CyberdreamToggleMode<CR>", { noremap = true, silent = true })
+			-- The event data property will contain a string with either "default" or "light" respectively
+			vim.api.nvim_create_autocmd("User", {
+				pattern = "CyberdreamToggleMode",
+				callback = function(event)
+					-- Your custom code here!
+					-- For example, notify the user that the colorscheme has been toggled
+					print("Switched to " .. event.data .. " mode!")
+				end,
+			})
 			vim.cmd.hi("Comment gui=none")
 		end,
 	},
-
 	-- Highlight todo, notes, etc in comments
 	{
 		"folke/todo-comments.nvim",
