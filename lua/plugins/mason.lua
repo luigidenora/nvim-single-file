@@ -33,6 +33,8 @@ return {
             "taplo",
             "templ",
             "yaml-language-server",
+            "typescript-language-server",
+            "angular-language-server",
         }
 
         local mr = require("mason-registry")

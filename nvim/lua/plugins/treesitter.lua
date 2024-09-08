@@ -4,6 +4,7 @@ return {
     event = { "BufReadPost", "BufNewFile" },
     cmd = { "TSUpdateSync" },
     opts = {
+        auto_install = true,
         highlight = { enable = true },
         indent = { enable = true },
         ensure_installed = {
@@ -29,6 +30,8 @@ return {
             "toml",
             "vimdoc",
             "yaml",
+            "typescript",
+            "angular",
         },
     },
     config = function(_, opts)
