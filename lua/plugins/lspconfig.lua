@@ -42,6 +42,7 @@ return {
             "taplo",
             "templ", -- requires gopls in PATH, mason probably won't work depending on the OS
             "yamlls",
+            "tsserver",
         }
         for _, server in pairs(no_config_servers) do
             require("lspconfig")[server].setup({})
