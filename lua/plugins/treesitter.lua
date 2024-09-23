@@ -29,6 +29,8 @@ return {
             "toml",
             "vimdoc",
             "yaml",
+            "typescript",
+            "angular",
         },
     },
     config = function(_, opts)
