@@ -21,7 +21,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 -- custom
-vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
+vim.keymap.set('n', '<leader>ee', vim.cmd.Ex)
 vim.keymap.set('n', '<leader>dl', "<cmd>Telescope diagnostic<cr>")
 vim.keymap.set("n", "<C-.>", vim.lsp.buf.code_action, { desc = "Code Action" })
 
