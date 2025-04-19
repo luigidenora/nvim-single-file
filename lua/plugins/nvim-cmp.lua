@@ -12,6 +12,24 @@ return {
 
         -- Ctrl + space triggers completion menu
         ['<C-Space>'] = cmp.mapping.complete(),
+
+        ['<Tab>'] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+            cmp.confirm({ select = true })
+          else
+            fallback()
+          end
+        end, { 'i', 's' }),
+
+        -- Shift-Tab to go backwards
+        ['<S-Tab>'] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_prev_item()
+          else
+            fallback()
+          end
+        end, { 'i', 's' }),
       }),
       snippet = {
         expand = function(args)
