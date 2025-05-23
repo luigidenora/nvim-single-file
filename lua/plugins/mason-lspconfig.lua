@@ -17,7 +17,6 @@ return {
 			function(server_name)
 				lspconfig[server_name].setup({
         })
-        vim.lsp.enable(server_name)
 			end,
 
 			-- Esempio di handler dedicato (se necessario):
