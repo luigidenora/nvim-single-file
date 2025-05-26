@@ -34,3 +34,6 @@ vim.diagnostic.config({
     },
   },
 })
+-- undofile 
+vim.opt.undofile = true
+vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
