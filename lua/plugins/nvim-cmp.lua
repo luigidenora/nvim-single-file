@@ -14,13 +14,19 @@ return {
         ['<C-Space>'] = cmp.mapping.complete(),
 
         ['<Tab>'] = cmp.mapping(function(fallback)
+          -- This little snippet will confirm with tab, and if no entry is selected, will confirm the first item
           if cmp.visible() then
-            cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-            cmp.confirm({ select = true })
+            local entry = cmp.get_selected_entry()
+            print(entry)
+            if not entry then
+              cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+            end
+            cmp.confirm()
           else
             fallback()
           end
-        end, { 'i', 's' }),
+          -- i = insert mode, s = select mode, c = command line mode
+        end, { 'i', 's', 'c' }),
 
         -- Shift-Tab to go backwards
         ['<S-Tab>'] = cmp.mapping(function(fallback)
@@ -29,7 +35,7 @@ return {
           else
             fallback()
           end
-        end, { 'i', 's' }),
+        end, { 'i', 's' , 'c' }),
       }),
       snippet = {
         expand = function(args)
