@@ -26,7 +26,7 @@ return {
             fallback()
           end
           -- i = insert mode, s = select mode, c = command line mode
-        end, { 'i', 's', 'c' }),
+        end, { 'i', 's' }),
 
         -- Shift-Tab to go backwards
         ['<S-Tab>'] = cmp.mapping(function(fallback)
@@ -35,7 +35,7 @@ return {
           else
             fallback()
           end
-        end, { 'i', 's' , 'c' }),
+        end, { 'i', 's' }),
       }),
       snippet = {
         expand = function(args)
